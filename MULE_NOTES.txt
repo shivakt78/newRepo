@@ -1,0 +1,144 @@
+To run Mule plugins the JAVA_HOME need to be set to JDK folder
+
+1)set JAVA_HOME
+2)mvn package -X  -f <pom>  (To build using Apache Maven)
+
+
+
+====
+EE files missing:
+
+same issue reported here
+http://stackoverflow.com/questions/31112575/how-can-i-deploy-maven-project-in-jenkins
+
+===========
+
+Done
+From here
+https://github.com/mulesoft-labs/jenkins-job-examples
+installed  following plugins
+copyartifact
+ws-cleanup
+extensible-choice-parameter
+
+And i see Build Pipeline Plugin already installed
+
+
+
+[‎11/‎11/‎2015 3:23 PM] Thadakamadla, Shiva: 
+1)svn project request - complete  2) Installed /configured jenkins on my local 3) Created the Mule project with Maven settings (pom.xml) file
+[‎11/‎11/‎2015 3:25 PM] Thadakamadla, Shiva: 
+4)Installed mule plugins on jenkins 5) Able to run with goal-clean on my local jenkins for my local mule project
+Still researching on how to package the mule project and push it to mmc
+[‎11/‎11/‎2015 3:27 PM] Thadakamadla, Shiva: 
+6)configure Anypoint studio with svn plugin
+
+==
+Sarah
+http://vhldvsmsv001.tvlport.net/svn/COB/branches/ParentPom_2_2_4_3_2/EsbParentPom/ 
+========
+
+
+http://mulesoft.github.io/jenkins-connector/guide/install.html
+Added Dependencies and Plugin from here
+..
+
+
+Local jenkins:
+Start the jnlp file first
+http://localhost:8080/
+
+
+CI
+http://mulesoft.github.io/jenkins-connector/guide/install.html
+Current stack - jenkins
+http://vhldvellb015.tvlport.net:9082/
+
+svn: find from doc
+
+https://docs.mulesoft.com/mule-user-guide/v/3.5/using-maven-with-mule
+
+https://docs.mulesoft.com/mule-user-guide/v/3.7/mule-maven-plugin
+
+http://mulesoft.github.io/jenkins-connector/guide/install.html
+https://github.com/mulesoft-labs/jenkins-job-examples
+
+
+To run jenkins on local
+Add this to the java Exception list http://mirrors.jenkins-ci.org
+So the jnlp can be opened.
+
+
+==
+https://docs.mulesoft.com/mule-user-guide/v/3.6/using-subversion-with-studio
+
+I fixed this by going into the Java Control Panel (Start Menu > All Programs > Java > Configure Java) and adding two URLs to the Security Edit Site List.
+http://androidscreencast.googlecode.com
+
+
+
+===
+
+1) Mule feature comparision:
+	https://www.mulesoft.com/platform/soa/mule-esb-enterprise
+
+
+2) MMC install Doc with settings before:
+	https://docs.mulesoft.com/mule-management-console/v/3.7/installing-the-production-version-of-mmc
+	
+Without settings was getting Caused by: java.lang.OutOfMemoryError: PermGen space
+
+To make sure the above setting from setenv.sh are reflected
+After Tomcat startup check this:
+
+ps -ef | grep java
+
+tomcat   10078     1 30 23:16 pts/1    00:01:02 /usr/java/jre1.7.0_80/bin/java -Djava.util.logging.config.file=/opt/jws-3.0/tomcat7/conf/logging.properties -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Xmx1024m -XX:MaxPermSize=512m -Djava.net.preferIPv4Stack=true -Djava.library.path=/opt/jws-3.0/tomcat7/lib -Djava.endorsed.dirs=/opt/jws-3.0/tomcat7/endorsed -classpath /opt/jws-3.0/tomcat7/bin/bootstrap.jar:/opt/jws-3.0/tomcat7/bin/tomcat-juli.jar -Dcatalina.base=/opt/jws-3.0/tomcat7 -Dcatalina.home=/opt/jws-3.0/tomcat7 -Djava.io.tmpdir=/opt/jws-3.0/tomcat7/temp org.apache.catalina.startup.Bootstrap start
+tomcat   10642 10048  0 23:19 pts/1    00:00:00 grep --color=auto java
+ 
+ 
+3) Copy the war file to mmc.war when Tomcat stopped.
+ 
+ 
+ 4) MMC Agent not required with the new version of Mule ESB 3.7.0 (Doc is wrong - This is true from 3.7.2 only - was not in 3.7.0)
+ https://docs.mulesoft.com/mule-management-console/v/3.7/
+ 
+ /opt/mule/mule-enterprise-standalone-3.7.2/lib/mule/mmc-agent-impl-3.7.2.jar
+ /opt/mule/mule-standalone-3.7.0/lib/mule -> Don't have the above jar file
+ 
+ 5)Install license
+  /opt/mule/mule-enterprise-standalone-3.7.2/bin/mule -installLicense license.lic
+   Mule removes the trial license and replaces it with the enterprise edition license.  In the $MULE_HOME/conf directory, Mule saves a new file called muleLicenseKey.lic
+ 
+/opt/mule/mule-enterprise-standalone-3.7.2/conf/muleLicenseKey.lic created  (Working fine in 3.7.2 not in 3.7.0) 
+ 
+ 
+ 
+ 6)To change the log folder jvm etc settings
+ /opt/mule/mule-enterprise-standalone-3.7.2/conf/wrapper.conf
+ https://docs.mulesoft.com/mule-user-guide/v/3.7/starting-and-stopping-mule-esb
+ 
+ 7) Start Mule in Background mode (Default is foreground mode)
+ https://docs.mulesoft.com/mule-user-guide/v/3.7/starting-and-stopping-mule-esb
+ 
+ export MULE_HOME=/opt/mule/mule-enterprise-standalone-3.7.2
+ export PATH=$PATH:/opt/mule/mule-enterprise-standalone-3.7.2/bin
+ mule start
+ 
+ == (OR)just this works also:  /opt/mule/mule-enterprise-standalone-3.7.2/bin/mule start
+ 
+   
+  8) Adding nodes to cluster/Disbanding - will restart the nodes
+  
+  9) MEL=Mule Expression Language.  eg: server.dateTime.format('dd/MM/yy')
+ 
+ 
+ 
+ 
+ Todo: stories??
+ RDBMS eval for MMC
+ Manage users of MMC using LDAP
+ 
+ 
+ 
+ 
